@@ -1,0 +1,241 @@
+/* Cable draw animation */
+@keyframes cable-draw {
+  from { stroke-dashoffset: 600; }
+  to { stroke-dashoffset: 0; }
+}
+
+.cable-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: cable-draw 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Brain scan lines scrolling down */
+@keyframes brain-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.brain-scan-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.brain-scan-lines::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 30px,
+    hsl(var(--neon-claw) / 0.04) 30px,
+    hsl(var(--neon-claw) / 0.04) 31px
+  );
+  animation: brain-scan 6s linear infinite;
+}
+
+/* Port activation hydraulic bounce */
+@keyframes port-activate {
+  0% { transform: scaleY(0.92); opacity: 0.7; }
+  60% { transform: scaleY(1.04); }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+.port-activate {
+  animation: port-activate 0.4s var(--hydraulic-easing) forwards;
+}
+
+/* Steam release burst */
+@keyframes steam-release {
+  0% { opacity: 0.8; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
+}
+
+.steam-burst {
+  animation: steam-release 0.6s ease-out forwards;
+}
+
+/* Data stream particles flowing */
+@keyframes data-stream {
+  0% { transform: translateY(-20px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(200px); opacity: 0; }
+}
+
+.data-particle {
+  position: absolute;
+  width: 2px;
+  height: 8px;
+  background: hsl(var(--glitch-cyan));
+  animation: data-stream 1.5s linear infinite;
+}
+
+.data-particle:nth-child(2) { left: 20%; animation-delay: 0.3s; }
+.data-particle:nth-child(3) { left: 40%; animation-delay: 0.6s; }
+.data-particle:nth-child(4) { left: 60%; animation-delay: 0.9s; }
+.data-particle:nth-child(5) { left: 80%; animation-delay: 1.2s; }
+
+/* Flash white overlay */
+@keyframes flash-white {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.flash-overlay {
+  animation: flash-white 0.4s ease-out forwards;
+}
+
+/* Static noise for errors */
+@keyframes static-noise {
+  0% { background-position: 0 0; }
+  10% { background-position: -5% -10%; }
+  20% { background-position: -15% 5%; }
+  30% { background-position: 7% -25%; }
+  40% { background-position: 20% 25%; }
+  50% { background-position: -25% 10%; }
+  60% { background-position: 15% 5%; }
+  70% { background-position: 0% 15%; }
+  80% { background-position: 25% 35%; }
+  90% { background-position: -10% 10%; }
+  100% { background-position: 0 0; }
+}
+
+.static-noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: static-noise 0.2s steps(4) infinite;
+  mix-blend-mode: overlay;
+  background-color: hsl(var(--neon-claw) / 0.3);
+}
+
+/* Chromatic aberration border */
+.chromatic-border {
+  box-shadow:
+    -3px 0 0 hsl(var(--neon-claw) / 0.4),
+    3px 0 0 hsl(var(--glitch-cyan) / 0.4),
+    0 0 30px hsl(var(--void-black) / 0.8),
+    inset 0 0 60px hsl(var(--void-black) / 0.5);
+  border: 1px solid hsl(var(--static-gray-light) / 0.3);
+}
+
+/* Hex button shape */
+.hex-port {
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+}
+
+/* Cursor blink for terminal inputs */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor::after {
+  content: '_';
+  animation: cursor-blink 0.8s step-end infinite;
+  color: hsl(var(--neon-claw));
+}
+
+/* OTP box styling */
+.otp-box {
+  width: 48px;
+  height: 56px;
+  background: hsl(var(--void-black));
+  border: 2px solid hsl(var(--static-gray));
+  color: hsl(var(--glitch-cyan));
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.25rem;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.otp-box:focus {
+  border-color: hsl(var(--glitch-cyan));
+  box-shadow: 0 0 12px hsl(var(--glitch-cyan) / 0.4);
+}
+
+/* Circuit pulse for success */
+@keyframes circuit-pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.circuit-trace {
+  animation: circuit-pulse 1.5s ease-in-out infinite;
+}
+
+/* CRT startup effect */
+@keyframes crt-on {
+  0% { transform: scaleY(0.005) scaleX(0); opacity: 0; }
+  30% { transform: scaleY(0.005) scaleX(1); }
+  50% { transform: scaleY(1) scaleX(1); opacity: 1; }
+  100% { transform: scaleY(1) scaleX(1); opacity: 1; }
+}
+
+.crt-startup {
+  animation: crt-on 0.8s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+/* Impact flash for background battle */
+@keyframes impact-flash {
+  0%, 90%, 100% { opacity: 0; }
+  92% { opacity: 0.08; }
+  94% { opacity: 0; }
+  96% { opacity: 0.05; }
+}
+
+.battle-bg-flash {
+  animation: impact-flash 5s ease infinite;
+  background: radial-gradient(circle at 50% 50%, hsl(var(--neon-claw) / 0.3), transparent 60%);
+}
+
+/* Text glitch cycle */
+@keyframes text-glitch-in {
+  0% { opacity: 0; transform: translateX(-10px); filter: blur(4px); }
+  50% { opacity: 0.5; transform: translateX(5px); filter: blur(1px); }
+  100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+
+.text-glitch-in {
+  animation: text-glitch-in 0.3s ease-out forwards;
+}
+
+/* Liquid fill sloshing for gauge */
+@keyframes liquid-slosh {
+  0%, 100% { transform: skewY(0deg); }
+  25% { transform: skewY(1.5deg); }
+  75% { transform: skewY(-1.5deg); }
+}
+
+.liquid-fill {
+  animation: liquid-slosh 2s ease-in-out infinite;
+}
+
+/* Connection severed shake */
+@keyframes severed-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-8px); }
+  20% { transform: translateX(8px); }
+  30% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  50% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+.severed-shake {
+  animation: severed-shake 0.5s ease-out;
+}

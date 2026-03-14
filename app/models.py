@@ -1,10 +1,27 @@
 from __future__ import annotations
 
-from typing import Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
 ActionType = Literal["attack", "defend", "special"]
+TraitType = Literal["Aggressive", "Calculated", "Unstable", "Loyal", "Vain"]
+BattleEventType = Literal[
+    "LOBBY_READY",
+    "POT_LOCKED",
+    "BATTLE_START",
+    "ATTACK",
+    "CRITICAL_HIT",
+    "HP_LOW",
+    "ABILITY_USED",
+    "DIALOGUE",
+    "COMMENTARY",
+    "SPECTATOR_REACTION",
+    "MATCH_END",
+    "POT_DISTRIBUTED",
+    "LEARNING_UPDATE",
+    "POST_MATCH",
+]
 
 
 class StrategyWeights(BaseModel):
@@ -46,55 +63,95 @@ class BattleHistoryEntry(BaseModel):
 
 class Agent(BaseModel):
     agent_id: str
+    display_name: str
     owner_wallet: str
     agent_wallet: str
     avatar_url: str
     avatar_features: AvatarFeatures
+    personality_traits: List[TraitType] = Field(default_factory=list)
     strategy_weights: StrategyWeights = Field(default_factory=StrategyWeights)
     experience: int = 0
     wins: int = 0
     losses: int = 0
     battle_history: List[BattleHistoryEntry] = Field(default_factory=list)
     learning_memory: List[str] = Field(default_factory=list)
+    rivalry_memory: Dict[str, Dict[str, int]] = Field(default_factory=dict)
 
 
-class BattleActorState(BaseModel):
-    agent_id: str
-    hp: int
-    action: ActionType
-    damage_dealt: int
-    damage_taken: int
-    defending: bool = False
-    special_on_cooldown: bool = False
+class BattleEvent(BaseModel):
+    seq: int
+    type: BattleEventType
+    timestamp: float
+    actor: Optional[str] = None
+    target: Optional[str] = None
+    action: Optional[ActionType] = None
+    damage: Optional[int] = None
+    line: Optional[str] = None
+    animation: Dict[str, float] = Field(default_factory=dict)
+    payload: Dict[str, Any] = Field(default_factory=dict)
 
 
-class BattleTurn(BaseModel):
-    turn: int
-    actor: str
-    target: str
-    action: ActionType
-    damage: int
-    hp_after_actor: int
-    hp_after_target: int
-    animation: Dict[str, float]
-    commentary: str
+class BattleRewards(BaseModel):
+    token: str = "SHARD"
+    pot: int
+    winner_reward: int
+    protocol_fee: int
+    arena_owner_fee: int
+    winner_wallet: str
+    arena_wallet: str
+    protocol_wallet: str
 
 
-class BattleReplay(BaseModel):
+class Lobby(BaseModel):
+    lobby_id: str
+    arena: str
+    mode: str
+    entry_fee: int
+    pot_size: int
+    players: List[str]
+    status: Literal["waiting", "locked", "in_battle", "completed"]
+
+
+class BattleExperience(BaseModel):
     battle_id: str
+    lobby: Lobby
     agent_a: str
     agent_b: str
     initial_hp: Dict[str, int]
-    turns: List[BattleTurn]
+    events: List[BattleEvent]
     winner: Optional[str]
+    rewards: Optional[BattleRewards] = None
     strategy_before: Dict[str, StrategyWeights]
     strategy_after: Dict[str, StrategyWeights]
 
 
 class CreateAgentRequest(BaseModel):
     owner_wallet: str
+    agent_id: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class BattleStartRequest(BaseModel):
     agentA: str
     agentB: str
+    lobby_id: Optional[str] = None
+    arena: str = "Crystal Spire Gardens"
+    mode: str = "Duel"
+    entry_fee: int = 50
+
+
+class LobbyCreateRequest(BaseModel):
+    agentA: str
+    agentB: Optional[str] = None
+    arena: str = "Crystal Spire Gardens"
+    mode: str = "Duel"
+    entry_fee: int = 50
+
+
+class LobbyJoinRequest(BaseModel):
+    agent_id: str
+
+
+class BalanceResponse(BaseModel):
+    wallet: str
+    balance: int

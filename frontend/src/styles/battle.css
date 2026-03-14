@@ -1,0 +1,207 @@
+/* ============================================
+   BATTLE ARENA — Combat Screen Styles
+   ============================================ */
+
+/* Hydraulic HP tube liquid fill */
+.hp-tube {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid hsl(var(--static-gray));
+}
+
+.hp-tube-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: height 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.hp-tube-liquid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.4), transparent);
+}
+
+/* Liquid slosh */
+@keyframes liquid-slosh {
+  0%, 100% { transform: skewY(0deg); }
+  25% { transform: skewY(1.5deg); }
+  75% { transform: skewY(-1.5deg); }
+}
+
+.hp-sloshing .hp-tube-liquid {
+  animation: liquid-slosh 1.2s ease-in-out;
+}
+
+/* Tube segment lines */
+.hp-tube-segments {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 8px,
+    hsl(var(--void-black) / 0.3) 8px,
+    hsl(var(--void-black) / 0.3) 9px
+  );
+}
+
+/* Tube bolts */
+.hp-bolt {
+  width: 6px;
+  height: 6px;
+  border: 1px solid hsl(var(--static-gray-light));
+  background: hsl(var(--static-gray));
+  position: absolute;
+}
+
+/* Battle log terminal */
+.battle-log {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--toxic-shard) / 0.3) hsl(var(--void-black));
+}
+
+.battle-log::-webkit-scrollbar {
+  width: 4px;
+}
+
+.battle-log::-webkit-scrollbar-track {
+  background: hsl(var(--void-black));
+}
+
+.battle-log::-webkit-scrollbar-thumb {
+  background: hsl(var(--toxic-shard) / 0.4);
+}
+
+/* Log entry animation */
+@keyframes log-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.log-entry {
+  animation: log-slide-in 0.3s ease-out forwards;
+}
+
+/* Rage meter pulse */
+@keyframes rage-pulse {
+  0%, 100% { box-shadow: 0 0 4px hsl(var(--neon-claw) / 0.3); }
+  50% { box-shadow: 0 0 16px hsl(var(--neon-claw) / 0.6), 0 0 30px hsl(var(--neon-claw) / 0.2); }
+}
+
+.rage-active {
+  animation: rage-pulse 0.8s ease-in-out infinite;
+}
+
+/* Rage berserk flash */
+@keyframes berserk-flash {
+  0%, 100% { background: transparent; }
+  50% { background: hsl(var(--neon-claw) / 0.08); }
+}
+
+.berserk-overlay {
+  animation: berserk-flash 0.3s ease-in-out infinite;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Command input caret blink */
+@keyframes terminal-caret {
+  0%, 100% { border-right-color: hsl(var(--toxic-shard)); }
+  50% { border-right-color: transparent; }
+}
+
+.terminal-input:focus {
+  border-right: 2px solid hsl(var(--toxic-shard));
+  animation: terminal-caret 0.8s step-end infinite;
+}
+
+/* Impact shake on hit */
+@keyframes impact-shake {
+  0%, 100% { transform: translate(0); }
+  10% { transform: translate(-4px, 2px); }
+  20% { transform: translate(4px, -3px); }
+  30% { transform: translate(-3px, -2px); }
+  40% { transform: translate(3px, 3px); }
+  50% { transform: translate(-2px, -1px); }
+  60% { transform: translate(2px, 1px); }
+  70% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -1px); }
+}
+
+.impact-shake {
+  animation: impact-shake 0.4s ease-out;
+}
+
+/* Damage flash on beast image */
+@keyframes damage-flash {
+  0% { opacity: 0.6; filter: brightness(3) saturate(0); }
+  100% { opacity: 0; filter: brightness(1) saturate(1); }
+}
+
+.damage-overlay {
+  animation: damage-flash 0.3s ease-out forwards;
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--neon-claw) / 0.4);
+  pointer-events: none;
+}
+
+/* Arena grid floor */
+.arena-grid {
+  background-image:
+    linear-gradient(hsl(var(--neon-claw) / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--neon-claw) / 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Turn indicator pulse */
+@keyframes turn-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.turn-active {
+  animation: turn-pulse 1s ease-in-out infinite;
+}
+
+/* Spectator chat */
+.spectator-chat {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--neon-claw) / 0.2) hsl(var(--void-black));
+}
+
+.spectator-chat::-webkit-scrollbar {
+  width: 3px;
+}
+
+.spectator-chat::-webkit-scrollbar-track {
+  background: hsl(var(--void-black));
+}
+
+.spectator-chat::-webkit-scrollbar-thumb {
+  background: hsl(var(--neon-claw) / 0.3);
+}
+
+@keyframes chat-slide-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-entry {
+  animation: chat-slide-in 0.2s ease-out forwards;
+}
